@@ -3,6 +3,8 @@ import { FiDownload } from "react-icons/fi";
 
 // components
 import Social from "@components/Social";
+import Photo from "@components/Photo";
+import Stats from "@components/Stats";
 
 const Home = () => {
   return (
@@ -13,7 +15,7 @@ const Home = () => {
         xl:pt-8 xl:pb-24"
         >
           {/* {text} */}
-          <div className="text-center xl:text-left">
+          <div className="text-center xl:text-left order-2 xl:order-none">
             <span className="text-xl">Software Developer</span>
             <h1 className="h1 mb-6">
               Hello I`m <br /> <span className="text-accent">Mehrshad.Dev</span>
@@ -41,9 +43,12 @@ const Home = () => {
             </div>
           </div>
           {/* {photo} */}
-          <div>photo</div>
+          <div className="order-1 xl:order-none mb-8 xl:mb-0">
+            <Photo />
+          </div>
         </div>
       </div>
+      <Stats />
     </section>
   );
 };
