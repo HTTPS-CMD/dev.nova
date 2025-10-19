@@ -13,6 +13,7 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     full_name = Column(String)
     created_at = Column(DateTime, default=datetime.utcnow)
+    books = relationship("Book", back_populates="user", cascade="all, delete-orphan")
 
 
 class Topic(Base):
@@ -45,6 +46,19 @@ class Summary(Base):
     markdown = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
     user = relationship("User")
+
+
+class Book(Base):
+    __tablename__ = "books"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    title = Column(String, nullable=False)
+    original_filename = Column(String, nullable=False)
+    file_path = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="books")
 
 
 class ExamSession(Base):

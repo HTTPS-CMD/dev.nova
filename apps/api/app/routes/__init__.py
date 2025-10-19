@@ -1,3 +1,3 @@
-from . import analytics, auth, exams, questions, summaries
+from . import analytics, auth, books, exams, questions, summaries
 
-__all__ = ["analytics", "auth", "exams", "questions", "summaries"]
+__all__ = ["analytics", "auth", "books", "exams", "questions", "summaries"]

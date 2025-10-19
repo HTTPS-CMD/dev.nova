@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Dict, Optional
 
 from jose import JWTError, jwt
 
@@ -10,9 +10,15 @@ ALGORITHM = "HS256"
 DEFAULT_EXPIRE_MINUTES = 60 * 24
 
 
-def create_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
+def create_token(
+    subject: str,
+    expires_delta: Optional[timedelta] = None,
+    extra_claims: Optional[Dict[str, str]] = None,
+) -> str:
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=DEFAULT_EXPIRE_MINUTES))
     payload = {"sub": subject, "exp": expire}
+    if extra_claims:
+        payload.update(extra_claims)
     return jwt.encode(payload, settings.jwt_secret, algorithm=ALGORITHM)
 
 
