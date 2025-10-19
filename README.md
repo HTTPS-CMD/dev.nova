@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AI Legal Learning Platform – MVP
+
+This repository contains the Phase 1 scaffold for an AI-powered, adaptive legal learning platform for Iran's bar exam (وکالت). It is a monorepo that bundles the Next.js web client, the FastAPI backend, shared packages, and local infrastructure resources.
+
+## Repository Structure
+
+```
+ai-legal-learning/
+├─ apps/
+│  ├─ web/                      # Next.js frontend (App Router, TypeScript, Tailwind, RTL)
+│  └─ api/                      # FastAPI backend (quiz engine, summarizer, analytics)
+├─ packages/
+│  └─ shared/                   # Shared TypeScript utilities (OpenAPI client placeholder)
+├─ infra/
+│  ├─ docker-compose.yml        # Local stack (Postgres, Redis, MinIO, API, Web)
+│  └─ alembic/                  # Database migrations scaffold
+├─ .env.example                 # Environment template for local development
+└─ README.md
+```
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone & Install
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repo>
+cd ai-legal-learning
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Start Local Infrastructure
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+cd infra
+docker compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Backend (FastAPI)
 
-## Learn More
+```bash
+cd ../apps/api
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Frontend (Next.js)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+cd ../../apps/web
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The web client is available at `http://localhost:3000` and communicates with the FastAPI backend running at `http://localhost:8000`.
 
-## Deploy on Vercel
+## Key Features in the MVP Scaffold
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Extractive summarizer API (`POST /summaries/extract`) using a deterministic TextRank-inspired heuristic.
+- Adaptive quiz engine with a rule-based difficulty adjuster (3 correct → harder, 3 incorrect → easier).
+- Dashboard UI with placeholder analytics charts and heatmap using Chart.js.
+- Quiz player UI wired to the adaptive endpoints via a proxy route.
+- Shared TypeScript package stub for future OpenAPI client generation.
+- Docker Compose stack covering Postgres, Redis, MinIO, the API, and the web client.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Next Steps
+
+1. Flesh out authentication with NextAuth.js and secure JWT exchange with the API.
+2. Implement file uploads to S3-compatible storage with presigned URLs and integrate the summarizer flow.
+3. Build the admin review UI and RQ worker pipeline for human-in-the-loop question curation.
+4. Expand analytics endpoints and connect them to real data sources.
+5. Implement Alembic migrations and seed scripts (1400–1403 bar exam questions).
+
+Refer to the `/infra`, `/apps/api`, and `/apps/web` directories for detailed documentation and code comments guiding further development.
